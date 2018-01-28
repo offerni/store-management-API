@@ -3,9 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\venda;
+use App\Venda;
 
-class tipo_pagamento extends Model
+class Tipo_pagamento extends Model
 {
     public function vendas() {
         return $this->belongsTo(venda);

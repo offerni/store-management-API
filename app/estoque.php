@@ -3,9 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\produto;
+use App\Produto;
 
-class estoque extends Model
+class Estoque extends Model
 {
     public function produtos() {
         return $this->hasMany(produto);

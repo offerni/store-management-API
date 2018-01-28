@@ -3,10 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\objeto_servico;
-use App\venda;
+use App\Objeto_servico;
+use App\Venda;
 
-class tipo_servico extends Model
+class Tipo_servico extends Model
 {
     public function objetos_servicos() {
         return $this->belongsToMany(objeto_servico)->as('tipos_servicos_objetos_servicos');

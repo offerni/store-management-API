@@ -3,9 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\produto;
+use App\Produto;
 
-class categoria extends Model
+class Categoria extends Model
 {
     public function produtos() {
         return $this->belongsToMany(produto);

@@ -3,9 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\tipo_pagamento;
-use App\produto;
-use App\tipo_servico;
+use App\Tipo_pagamento;
+use App\Produto;
+use App\Tipo_servico;
 
 class venda extends Model
 {
