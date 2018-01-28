@@ -6,9 +6,13 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ProdutoResource;
 use App\Produto;
 
-class ProdutoController extends Controller
+class ProdutosController extends Controller
 {
-    public function find() {
+    public function find_all() {
         return new ProdutoResource(Produto::all());
+    }
+
+    public function find_one($id) {
+        return new ProdutoResource(Produto::find($id));
     }
 }
