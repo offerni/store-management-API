@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Categoria;
 use App\Venda;
+use App\Estoque;
 
 class Produto extends Model
 {
@@ -14,5 +15,9 @@ class Produto extends Model
 
     public function vendas() {
         return $this->belongsTo(venda);
+    }
+
+    public function estoque() {
+        return $this->belongsTo(estoque);
     }
 }

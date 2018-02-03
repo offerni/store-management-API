@@ -10,4 +10,17 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function messages() {
+        return $messages = [
+        'unique' => 'Este :attribute já existe'
+        ];
+    }
+
+    public function rules() {
+        return $rules =  [
+            'nome' => 'required|unique:categorias,nome',
+        ];
+    }
+    
 }
