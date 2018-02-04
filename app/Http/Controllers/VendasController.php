@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\VendaResource;
 use App\venda;
 use Illuminate\Support\Facades\DB;
+use Validator;
 
 class VendasController extends Controller
 {
@@ -17,7 +18,7 @@ class VendasController extends Controller
             ->header('Content-Type', 'application/json');
 
         } else {
-            return new VendaResourcesourcee(vendaa::all());
+            return new VendaResource(Venda::all());
         }  
         
     }
@@ -30,14 +31,34 @@ class VendasController extends Controller
             ->header('Content-Type', 'application/json');
 
         } else {
-            return new VendaResourcesourcee(vendaa::find($id));
+            return new VendaResource(Venda::find($id));
         }  
     }
 
     public function create(Request $req) {
-        $dados = $req->all();
-        DB::table('vendas')->insert($dados);
-        return response('Cadastrado', 200)
-        ->header('Content-Type', 'text/plain'); ;
+        $data = $req->all(); 
+        $messages = [
+            'required' => 'O campo :attribute não pode ser vazio',
+            'numeric' => 'O campo :attribute deve ser um número'
+            ];
+
+        $rules =  [
+            'tipo_pagamento_id' => 'required',
+            'valor' => 'numeric',
+            'produto_id' => 'required',
+            'tipo_servico_id' => 'required'
+        ];
+
+        $validator = Validator::make($data, $rules, $messages);
+
+        if ($validator->fails()) {    
+
+            return response($validator->messages(), 400);
+
+        } else {
+
+            Venda::create($data);
+            return response('Cadastrado', 200)->header('Content-Type', 'application/json');
+        }
     }
 }

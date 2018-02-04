@@ -9,6 +9,7 @@ use App\Tipo_servico;
 
 class venda extends Model
 {
+    protected $fillable = ['descricao', 'valor', 'tipo_pagamento_id', 'produto_id', 'tipo_servico_id'];
     public function tipos_pagamentos() {
         return $this->hasMany(tipo_pagamento);
     }

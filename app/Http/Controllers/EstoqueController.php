@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\EstoqueResource;
 use App\Estoque;
 use Illuminate\Support\Facades\DB;
+use Validator;
 
 class EstoqueController extends Controller
 {
@@ -25,7 +26,7 @@ class EstoqueController extends Controller
         $data = Estoque::find($id);
         
         if (!$data) {
-            return response(json_encode(['erro' => 'Nenhum produto encontrado no estoque']), 404)
+            return response(json_encode(['erro' => 'Produto não encontrado no estoque']), 404)
             ->header('Content-Type', 'application/json');
 
         } else {
@@ -34,9 +35,63 @@ class EstoqueController extends Controller
     }
 
     public function create(Request $req) {
-        $dados = $req->all();
-        DB::table('estoque')->insert($dados);
-        return response('Cadastrado', 200)
-        ->header('Content-Type', 'text/plain'); ;
+        $data = $req->all(); 
+        $messages = [
+            'unique' => 'Este :attribute já existe',
+            'required' => 'O campo :attribute não pode ser vazio',
+            'numeric' => 'O campo :attribute deve ser um número'
+            ];
+
+        $rules =  [
+            'valor_entrada' => 'required|numeric',
+            'valor_saida' => 'required|numeric',
+            'quantidade' => 'required|numeric',
+            'produto_id' => 'required|numeric'
+        ];
+
+        $validator = Validator::make($data, $rules, $messages);
+
+        if ($validator->fails()) {    
+
+            return response($validator->messages(), 400);
+
+        } else {
+
+            Estoque::create($data);
+            return response('Cadastrado', 200)->header('Content-Type', 'application/json');
+        }
+    }
+
+    public function update(Request $req, $id) {
+        $data = $req->all(); 
+        $messages = [
+            'unique' => 'Este :attribute já existe',
+            'required' => 'O campo :attribute não pode ser vazio',
+            'numeric' => 'O campo :attribute deve ser um número'
+            ];
+
+        $rules =  [
+            'valor_entrada' => 'required_without:valor_saida,quantidade,produto_id|numeric',
+            'valor_saida' => 'required_without:valor_entrada|numeric',
+            'quantidade' => 'required_without:valor_entrada,valor_saida,produto_id|numeric',
+            'produto_id' => 'required_without:valor_entrada,valor_saida,quantidade|numeric'
+        ];
+
+        if (!Estoque::find($id) || count($data)==0) {
+            return response(json_encode(['erro' => 'Produto não encontrado no estoque']), 404)
+            ->header('Content-Type', 'application/json');
+        } else
+
+        $validator = Validator::make($data, $rules, $messages);
+
+        if ($validator->fails()) {    
+
+            return response($validator->messages(), 400);
+
+        } else {
+
+            Estoque::find($id)->update($data);
+            return response('Cadastrado', 200)->header('Content-Type', 'application/json');
+        }
     }
 }

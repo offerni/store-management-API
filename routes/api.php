@@ -45,3 +45,12 @@ Route::post('/produto', ['as' => 'produto', 'uses' => 'ProdutosController@create
 Route::post('/tipo_pagamento', ['as' => 'tipo_pagamento', 'uses' => 'Tipos_pagamentosController@create']);
 Route::post('/tipo_servico', ['as' => 'tipo_servico', 'uses' => 'Tipos_servicosController@create']);
 Route::post('/venda', ['as' => 'venda', 'uses' => 'VendasController@create']);
+
+// rotas update
+Route::patch('/categoria/{id}', ['as' => 'categoria', 'uses' => 'CategoriasController@update']);
+Route::patch('/estoque/{id}', ['as' => 'estoque', 'uses' => 'EstoqueController@update']);
+Route::patch('/objeto_servico/{id}', ['as' => 'objeto_servico', 'uses' => 'Objetos_servicosController@update']);
+Route::patch('/produto/{id}', ['as' => 'produto', 'uses' => 'ProdutosController@update']);
+Route::patch('/tipo_pagamento/{id}', ['as' => 'tipo_pagamento', 'uses' => 'Tipos_pagamentosController@update']);
+Route::patch('/tipo_servico/{id}', ['as' => 'tipo_servico', 'uses' => 'Tipos_servicosController@update']);
+Route::patch('/venda/{id}', ['as' => 'venda', 'uses' => 'VendasController@update']);

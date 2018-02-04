@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ProdutoResource;
 use App\Produto;
 use Illuminate\Support\Facades\DB;
+use Validator;
 
 
 class ProdutosController extends Controller
@@ -35,9 +36,27 @@ class ProdutosController extends Controller
     }
 
     public function create(Request $req) {
-        $dados = $req->all();
-        DB::table('produtos')->insert($dados);
-        return response('Cadastrado', 200)
-        ->header('Content-Type', 'text/plain'); ;
+        $data = $req->all(); 
+        $messages = [
+            'unique' => 'Este :attribute já existe',
+            'required' => 'O campo :attribute não pode ser vazio',
+            'numeric' => 'O campo :attribute deve ser um número'
+            ];
+
+        $rules =  [
+            'nome' => 'required|unique:produtos,nome'
+        ];
+
+        $validator = Validator::make($data, $rules, $messages);
+
+        if ($validator->fails()) {    
+
+            return response($validator->messages(), 400);
+
+        } else {
+
+            Produto::create($data);
+            return response('Cadastrado', 200)->header('Content-Type', 'application/json');
+        }
     }
 }

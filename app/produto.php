@@ -9,6 +9,7 @@ use App\Estoque;
 
 class Produto extends Model
 {
+    protected $fillable = ['nome', 'descricao', 'img'];
     public function categorias() {
         return $this->belongsToMany(categoria);
     }

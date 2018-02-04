@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\Tipo_servicoResource;
 use App\Tipo_servico;
 use Illuminate\Support\Facades\DB;
+use Validator;
 
 class Tipos_servicosController extends Controller
 {
@@ -17,7 +18,7 @@ class Tipos_servicosController extends Controller
             ->header('Content-Type', 'application/json');
 
         } else {
-            return new Tipo_servicoResourcee(Tipo_servico::all());
+            return new Tipo_servicoResource(Tipo_servico::all());
         }  
     }
 
@@ -29,15 +30,31 @@ class Tipos_servicosController extends Controller
             ->header('Content-Type', 'application/json');
 
         } else {
-            return new Tipo_servicoResourcee(Tipo_servico::find($id));
+            return new Tipo_servicoResource(Tipo_servico::find($id));
         } 
         
     }
 
     public function create(Request $req) {
-        $dados = $req->all();
-        DB::table('tipos_servicos')->insert($dados);
-        return response('Cadastrado', 200)
-        ->header('Content-Type', 'text/plain'); ;
+        $data = $req->all(); 
+        $messages = [
+            'required' => 'O campo :attribute não pode ser vazio'
+            ];
+
+        $rules =  [
+            'nome' => 'required'
+        ];
+
+        $validator = Validator::make($data, $rules, $messages);
+
+        if ($validator->fails()) {    
+
+            return response($validator->messages(), 400);
+
+        } else {
+
+            Tipo_servico::create($data);
+            return response('Cadastrado', 200)->header('Content-Type', 'application/json');
+        }
     }
 }

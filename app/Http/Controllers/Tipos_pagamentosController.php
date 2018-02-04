@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\Tipo_pagamentoResource;
 use App\Tipo_pagamento;
 use Illuminate\Support\Facades\DB;
+use Validator;
 
 class Tipos_pagamentosController extends Controller
 {
@@ -17,7 +18,7 @@ class Tipos_pagamentosController extends Controller
             ->header('Content-Type', 'application/json');
 
         } else {
-            return new Tipo_pagamentoResourcee(Tipo_pagamento::all());
+            return new Tipo_pagamentoResource(Tipo_pagamento::all());
         }  
     }
 
@@ -29,15 +30,32 @@ class Tipos_pagamentosController extends Controller
             ->header('Content-Type', 'application/json');
 
         } else {
-            return new Tipo_pagamentoResourcee(Tipo_pagamento::find($id));
+            return new Tipo_pagamentoResource(Tipo_pagamento::find($id));
         } 
         
     }
 
     public function create(Request $req) {
-        $dados = $req->all();
-        DB::table('tipos_pagamentos')->insert($dados);
-        return response('Cadastrado', 200)
-        ->header('Content-Type', 'text/plain'); ;
+        $data = $req->all(); 
+        $messages = [
+            'unique' => 'Este :attribute já existe',
+            'required' => 'O campo :attribute não pode ser vazio'
+            ];
+
+        $rules =  [
+            'nome' => 'required|unique:tipos_pagamentos,nome'
+        ];
+
+        $validator = Validator::make($data, $rules, $messages);
+
+        if ($validator->fails()) {    
+
+            return response($validator->messages(), 400);
+
+        } else {
+
+            Tipo_pagamento::create($data);
+            return response('Cadastrado', 200)->header('Content-Type', 'application/json');
+        }
     }
 }
